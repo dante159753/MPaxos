@@ -81,9 +81,9 @@ func (n *node) recv() {
 		m := n.Recv()
 		switch m := m.(type) {
 		case Request:
-			m.c = make(chan Reply, 1)
+			m.C = make(chan Reply, 1)
 			go func(r Request) {
-				n.Send(r.NodeID, <-r.c)
+				n.Send(r.NodeID, <-r.C)
 			}(m)
 			n.MessageChan <- m
 			continue

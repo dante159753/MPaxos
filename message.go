@@ -26,12 +26,12 @@ type Request struct {
 	Properties map[string]string
 	Timestamp  int64
 	NodeID     ID         // forward by node
-	c          chan Reply // reply channel created by request receiver
+	C          chan Reply // reply channel created by request receiver
 }
 
 // Reply replies to current client session
 func (r *Request) Reply(reply Reply) {
-	r.c <- reply
+	r.C <- reply
 }
 
 func (r Request) String() string {

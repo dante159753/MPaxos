@@ -14,12 +14,24 @@ type Key int
 // Value type of key-value database
 type Value []byte
 
+type Operation uint8
+
+const (
+	NONE Operation = iota
+	PUT
+	GET
+	DELETE
+	RECONFIG
+	TRANSFERFINISH
+)
+
 // Command of key-value database
 type Command struct {
 	Key       Key
 	Value     Value
 	ClientID  ID
 	CommandID int
+	Op        Operation
 }
 
 func (c Command) Empty() bool {
@@ -78,8 +90,8 @@ func NewDatabase() Database {
 
 /*
 // Execute implements StateMachine interface
-func (d *database) Execute(c interface{}) interface{} {
-	cmd, ok := c.(Command)
+func (d *database) Execute(C interface{}) interface{} {
+	cmd, ok := C.(Command)
 	if !ok {
 		log.Error("cannot execute non command")
 	}

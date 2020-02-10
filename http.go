@@ -94,11 +94,11 @@ func (n *node) handleRoot(w http.ResponseWriter, r *http.Request) {
 	req.Command = cmd
 	req.Timestamp = time.Now().UnixNano()
 	req.NodeID = n.id // TODO does this work when forward twice
-	req.c = make(chan Reply, 1)
+	req.C = make(chan Reply, 1)
 
 	n.MessageChan <- req
 
-	reply := <-req.c
+	reply := <-req.C
 
 	if reply.Err != nil {
 		http.Error(w, reply.Err.Error(), http.StatusInternalServerError)

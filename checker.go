@@ -26,7 +26,7 @@ func (c *checker) add(o *operation) {
 	c.Graph.Add(o)
 	for v := range c.Graph.Vertices() {
 		if v.(*operation).happenBefore(*o) {
-			//c.AddEdge(o, v)
+			//C.AddEdge(o, v)
 			c.AddEdge(v, o)
 		}
 	}
@@ -42,7 +42,7 @@ func (c *checker) clear() {
 
 // match finds the first matching write operation to the given read operation
 func (c *checker) match(read *operation) *operation {
-	//for _, v := range c.Graph.BFSReverse(read) {
+	//for _, v := range C.Graph.BFSReverse(read) {
 	for v := range c.Graph.Vertices() {
 		if read.output == v.(*operation).input {
 			return v.(*operation)
