@@ -1,8 +1,10 @@
 package paxi
 
 import (
+	"fmt"
 	"math"
 	"math/rand"
+	"os"
 	"sync"
 	"time"
 
@@ -183,8 +185,8 @@ func (b *Benchmark) Run() {
 	log.Infof("Throughput = %f\n", float64(len(b.latency))/t.Seconds())
 	log.Info(stat)
 
-	stat.WriteFile("latency")
-	b.History.WriteFile("history")
+	stat.WriteFile("latency" + fmt.Sprintf(".%d", os.Getpid())) // in milli second
+	b.History.WriteFile("history" + fmt.Sprintf(".%d", os.Getpid()))
 
 	if b.LinearizabilityCheck {
 		n := b.History.Linearizable()

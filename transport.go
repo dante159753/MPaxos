@@ -5,6 +5,7 @@ import (
 	"encoding/gob"
 	"errors"
 	"flag"
+	"io"
 	"net"
 	"net/url"
 	"strings"
@@ -155,6 +156,9 @@ func (t *tcp) Listen() {
 						err := decoder.Decode(&m)
 						if err != nil {
 							log.Error(err)
+							if err == io.EOF { // connection is closed
+								return
+							}
 							continue
 						}
 						t.recv <- m

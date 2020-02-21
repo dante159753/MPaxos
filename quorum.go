@@ -61,9 +61,33 @@ func (q *Quorum) Majority() bool {
 	return q.size > config.n/2
 }
 
+// Majority quorum satisfied
+func (q *Quorum) WorkingMajority(config []ID) bool {
+	nack := 0
+	for _, id := range config {
+		if q.acks[id] == true {
+			nack++
+		}
+	}
+	//log.Infof("slow quorum nack:%v, config:%v, 1/2:%v", nack, config, len(config)/2)
+	return nack > len(config)/2
+}
+
 // FastQuorum from fast paxos
 func (q *Quorum) FastQuorum() bool {
 	return q.size >= config.n*3/4
+}
+
+// FastWorkingQuorum from migratable paxos
+func (q *Quorum) FastWorkingQuorum(config []ID) bool {
+	nack := 0
+	for _, id := range config {
+		if q.acks[id] == true {
+			nack++
+		}
+	}
+	//log.Infof("fast quorum nack:%v, config:%v, 3/4:%v", nack, config, len(config)*3/4)
+	return nack >= len(config)*3/4
 }
 
 // AllZones returns true if there is at one ack from each zone

@@ -13,6 +13,8 @@ func init() {
 	gob.Register(Accept{})
 	gob.Register(AcceptReply{})
 	gob.Register(Commit{})
+	gob.Register(TransferMsg{})
+	gob.Register(TransferReply{})
 }
 
 type PreAccept struct {
@@ -35,6 +37,7 @@ type PreAcceptReply struct {
 	Seq       int
 	Dep       map[paxi.ID]int
 	Committed map[paxi.ID]int
+	Ok		  bool // false的话说明消息被拒绝
 }
 
 func (m PreAcceptReply) String() string {
@@ -62,4 +65,20 @@ type Commit struct {
 	Command paxi.Command
 	Seq     int
 	Dep     map[paxi.ID]int
+}
+
+type TransferMsg struct {
+	Ballot  paxi.Ballot
+	Replica paxi.ID
+	Slot    int
+	Command paxi.Command
+	Seq     int
+	Dep     map[paxi.ID]int
+}
+
+type TransferReply struct {
+	Ballot  paxi.Ballot
+	Replica paxi.ID
+	Slot    int
+	Ok 		bool
 }

@@ -23,6 +23,8 @@ type instance struct {
 	request *paxi.Request
 	quorum  *paxi.Quorum
 	changed bool // seq and dep changed
+	transferOk bool // transfer是否已通知到新quorum多数
+	Index, Lowlink int // 计算SCC用到
 }
 
 // merge the seq and dep for instance
@@ -32,7 +34,7 @@ func (i *instance) merge(seq int, dep map[paxi.ID]int) {
 		i.changed = true
 	}
 	for id, d := range dep {
-		if d > i.dep[id] {
+		if getRealInstance(d) > getRealInstance(i.dep[id]) {
 			i.dep[id] = d
 			i.changed = true
 		}

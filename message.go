@@ -3,6 +3,7 @@ package paxi
 import (
 	"encoding/gob"
 	"fmt"
+	"github.com/ailidani/paxi/log"
 )
 
 func init() {
@@ -31,7 +32,11 @@ type Request struct {
 
 // Reply replies to current client session
 func (r *Request) Reply(reply Reply) {
-	r.C <- reply
+	if r.C != nil{
+		r.C <- reply
+	} else {
+		log.Errorf("reply but encounter nil chennel for %v", r)
+	}
 }
 
 func (r Request) String() string {
