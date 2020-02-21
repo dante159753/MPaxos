@@ -498,21 +498,22 @@ func (r *Replica) handlePreAcceptReply(m PreAcceptReply) {
 	//	curConfig = r.configList[curKey][r.newConfigVer[curKey]]
 	//}
 	if i.quorum.FastWorkingQuorum(curConfig) {
+		// TODO: 采集到不知道的dep之后的处理
 		// 满足quorum则dep更新到最新状态，再检查是否依赖于不知道的reconfig
-		for id, inst := range(i.dep) {
-			if isConfigDep(inst) && r.log[id][getRealInstance(inst)] != nil && // 依赖于未知reconfig
-				i.cmd.Op != paxi.RECONFIG && i.cmd.Op != paxi.TRANSFERFINISH && // 普通cmd才检查
-				i.cmd.Value != nil /* nil命令都可以提交 */ {
-
-				hasUnknownConfig = true
-				log.Infof("encounter unknown config(id:%v, inst:%v, exec[%v]:%v), newconfigstate of key=%v %v -> CONFIG_NEW_UNCOMMITTED",
-					id, inst, id, r.executed[id], curKey, r.newConfigState[curKey])
-				r.newConfigState[curKey] = CONFIG_NEW_UNCOMMITTED
-				// 这条命令在reconfig之后，现在不能提交，所以修改为nop命令
-				i.cmd.Value = nil
-			}
-
-		}
+		//for id, inst := range(i.dep) {
+		//	if isConfigDep(inst) && r.log[id][getRealInstance(inst)] != nil && // 依赖于未知reconfig
+		//		i.cmd.Op != paxi.RECONFIG && i.cmd.Op != paxi.TRANSFERFINISH && // 普通cmd才检查
+		//		i.cmd.Value != nil /* nil命令都可以提交 */ {
+		//
+		//		hasUnknownConfig = true
+		//		log.Infof("encounter unknown config(id:%v, inst:%v, exec[%v]:%v), newconfigstate of key=%v %v -> CONFIG_NEW_UNCOMMITTED",
+		//			id, inst, id, r.executed[id], curKey, r.newConfigState[curKey])
+		//		r.newConfigState[curKey] = CONFIG_NEW_UNCOMMITTED
+		//		// 这条命令在reconfig之后，现在不能提交，所以修改为nop命令
+		//		i.cmd.Value = nil
+		//	}
+		//
+		//}
 
 		// fast path or slow path
 		if !i.changed && committed && !hasUnknownConfig{
