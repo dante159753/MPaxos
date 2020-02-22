@@ -19,7 +19,7 @@
     "chan_buffer_size": 1024,
     "buffer_size": 1024,
     "multiversion": false,
-    "tolerate_f": 2,
+    "tolerate_f": 1,
     "benchmark": {
         "T": 20,
         "N": 0,
