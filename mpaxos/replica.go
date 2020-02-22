@@ -14,7 +14,7 @@ type Config []paxi.ID
 type ConfigState uint8
 type ConfigVer int32
 
-const TOLERATE_F = 1
+//const TOLERATE_F = 1
 
 const (
 	CONFIG_NORMAL ConfigState = iota // can accept new config
@@ -190,7 +190,7 @@ func (r *Replica) generateZoneConfig() Config {
 	pref := fields[0] + "."
 	log.Infof("prefix of %v is %v", r.ID(), pref)
 	for k := range peers {
-		if len(zoneConfig) >= TOLERATE_F*2+1 {
+		if len(zoneConfig) >= paxi.GetConfig().TolerateF*2+1 {
 			break
 		}
 		if strings.HasPrefix(string(k), pref) {
@@ -222,7 +222,7 @@ func (r *Replica) initConfig(m paxi.Request) paxi.Request {
 	//for firstConfig[selfpos] != r.ID() {
 	//	selfpos++
 	//}
-	//for i := 0; i < TOLERATE_F*2+1; i++ {
+	//for i := 0; i < paxi.GetConfig().TolerateF*2+1; i++ {
 	//	nextConfig = append(nextConfig, firstConfig[(selfpos+i)%nPeers])
 	//}
 	jsonstr, _ := json.Marshal(ReconfigCmd{nextConfig, ConfigVer(0)})

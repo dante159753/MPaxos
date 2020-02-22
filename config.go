@@ -24,6 +24,8 @@ type Config struct {
 	MultiVersion   bool    `json:"multiversion"`     // create multi-version database
 	Benchmark      Bconfig `json:"benchmark"`        // benchmark configuration
 
+	TolerateF 	   int 	   `json:"tolerate_f"`		 // used in mpaxos
+
 	// for future implementation
 	// Batching bool `json:"batching"`
 	// Consistency string `json:"consistency"`
@@ -61,6 +63,7 @@ func MakeDefaultConfig() Config {
 		ChanBufferSize: 1024,
 		MultiVersion:   false,
 		Benchmark:      DefaultBConfig(),
+		TolerateF: 		1,
 	}
 }
 
