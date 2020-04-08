@@ -52,8 +52,8 @@ func (s Stat) WriteCDFFile(path string) error {
 	defer file.Close()
 
 	w := bufio.NewWriter(file)
-	for i := 1; i<=100; i++ {
-		pos := float64(i) / 100
+	for i := 1; i<100; i++ {
+		pos := float64(i) / 100.0
 		fmt.Fprintln(w, s.Data[int(pos*float64(len(s.Data)))])
 	}
 	return w.Flush()
