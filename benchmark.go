@@ -186,6 +186,7 @@ func (b *Benchmark) Run() {
 	log.Info(stat)
 
 	stat.WriteFile("latency" + fmt.Sprintf(".%d", os.Getpid())) // in milli second
+	stat.WriteCDFFile("cdf" + fmt.Sprintf(".%d", os.Getpid())) // in milli second
 	b.History.WriteFile("history" + fmt.Sprintf(".%d", os.Getpid()))
 
 	if b.LinearizabilityCheck {

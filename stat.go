@@ -44,13 +44,29 @@ func (s Stat) WriteFile(path string) error {
 	return w.Flush()
 }
 
+func (s Stat) WriteCDFFile(path string) error {
+	file, err := os.Create(path)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	w := bufio.NewWriter(file)
+	for i := 1; i<=100; i++ {
+		pos := float64(i) / 100
+		fmt.Fprintln(w, s.Data[int(pos*float64(len(s.Data)))])
+	}
+	return w.Flush()
+}
+
 func (s Stat) String() string {
 	return fmt.Sprintf("size = %d\nmean = %f\nmin = %f\nmax = %f\n" +
 		"median = %f\n" +
 		"p90 = %f\np95 = %f\np99 = %f\np999 = %f\n",
 		s.Size, s.Mean, s.Min, s.Max,
 		s.Median,
-		s.P90, s.P95, s.P99, s.P999) + s.getCDF()
+		s.P90, s.P95, s.P99, s.P999)
+	//+ s.getCDF()
 
 }
 
@@ -58,7 +74,7 @@ func (s Stat) getCDF() string {
 	ret := ""
 	for i := 1; i<=100; i++ {
 		pos := float64(i) / 100
-		ret += fmt.Sprintf("%f\n", s.Data[int(pos*float64(len(s.Data)))])
+		ret += fmt.Sprintf("%.1f\n", s.Data[int(pos*float64(len(s.Data)))])
 	}
 	return ret
 }
