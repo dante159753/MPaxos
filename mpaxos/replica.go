@@ -189,12 +189,25 @@ func (r *Replica) generateZoneConfig() Config {
 	fields := strings.Split(string(r.ID()), ".")
 	pref := fields[0] + "."
 	log.Infof("prefix of %v is %v", r.ID(), pref)
+	var zoneServers Config
 	for k := range peers {
+		if strings.HasPrefix(string(k), pref) {
+			zoneServers = append(zoneServers, k)
+		}
+	}
+	meet := false
+	for k:=0; k<len(zoneServers) * 2; k++ {
 		if len(zoneConfig) >= paxi.GetConfig().TolerateF*2+1 {
 			break
 		}
-		if strings.HasPrefix(string(k), pref) {
-			zoneConfig = append(zoneConfig, k)
+		cur := zoneServers[k % len(zoneServers)]
+		if !meet {
+			if cur == r.ID() {
+				meet = true
+				zoneConfig = append(zoneConfig, cur)
+			}
+		} else {
+			zoneConfig = append(zoneConfig, cur)
 		}
 	}
 	log.Infof("zone of %v is %v", r.ID(), zoneConfig)
